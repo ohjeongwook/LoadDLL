@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <Windows.h>
+#include <conio.h>
 
 int main(int argc, char **argv)
 {
@@ -20,17 +21,32 @@ int main(int argc, char **argv)
     char *filename = argv[1];
 
     printf("Loading %s\n", filename);
+
+    printf("Press any key to continue...\n");
+    _getch();
+
     HMODULE hLib = LoadLibraryA(filename);
 
     for (int i = 2; i < argc; i++)
     {
         FARPROC proc = GetProcAddress(hLib, argv[i]);
-        printf("Calling proc: %s (%x)", argv[i], proc);
-        (*proc)();
+
+        if (proc != NULL)
+        {
+            printf("Calling function: %s (%x)\n", argv[i], proc);
+
+            printf("Press any key to continue...\n");
+            _getch();
+            (*proc)();
+        }
+        else
+        {
+            printf("Can't resolve function: %s\n", argv[i] );
+        }
     }
-    while (1 == 1)
-    {
-        Sleep(1000 * 10);
-    }
+
+    printf("Finishing program\n");
+    printf("Press any key to continue...\n");
+    _getch();
     return 0;
 }
